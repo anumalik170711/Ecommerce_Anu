@@ -8,6 +8,7 @@ public class StartCliRunner implements CommandLineRunner {
 
     private final CliService cliService;
 
+
     public StartCliRunner(CliService cliService) {
         this.cliService = cliService;
     }
