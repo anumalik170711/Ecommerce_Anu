@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopEase - E-Commerce Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <i class="fas fa-shopping-bag"></i>
+                <span>ShopEase</span>
+            </a>
+            <div class="nav-links">
+                <a href="#" onclick="showSection('home')">Home</a>
+                <a href="#" onclick="showSection('products')">Products</a>
+                <a href="#" onclick="showSection('cart')">
+                    <i class="fas fa-shopping-cart"></i> Cart
+                    <span class="cart-count" id="cartCount">0</span>
+                </a>
+                <a href="#" onclick="showSection('orders')">Orders</a>
+            </div>
+            <div class="auth-buttons" id="authButtons">
+                <button class="btn btn-outline" onclick="showModal('loginModal')">Login</button>
+                <button class="btn btn-primary" onclick="showModal('registerModal')">Register</button>
+            </div>
+            <div class="user-menu" id="userMenu" style="display: none;">
+                <span id="userName">Welcome, User</span>
+                <button class="btn btn-outline" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="homeSection">
+        <div class="hero-content">
+            <h1>Welcome to <span class="gradient-text">ShopEase</span></h1>
+            <p>Discover amazing products at unbeatable prices</p>
+            <button class="btn btn-primary btn-large" onclick="showSection('products')">
+                <i class="fas fa-shopping-bag"></i> Shop Now
+            </button>
+        </div>
+        <div class="hero-image">
+            <div class="floating-card">
+                <i class="fas fa-truck"></i>
+                <span>Free Shipping</span>
+            </div>
+            <div class="floating-card delay-1">
+                <i class="fas fa-shield-alt"></i>
+                <span>Secure Payment</span>
+            </div>
+            <div class="floating-card delay-2">
+                <i class="fas fa-headset"></i>
+                <span>24/7 Support</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products-section" id="productsSection" style="display: none;">
+        <div class="section-header">
+            <h2><i class="fas fa-fire"></i> Featured Products</h2>
+            <div class="category-filter">
+                <button class="filter-btn active" onclick="filterProducts('all')">All</button>
+                <button class="filter-btn" onclick="filterProducts('Electronics')">Electronics</button>
+                <button class="filter-btn" onclick="filterProducts('Clothing')">Clothing</button>
+                <button class="filter-btn" onclick="filterProducts('Books')">Books</button>
+            </div>
+        </div>
+        <div class="products-grid" id="productsGrid">
+            <!-- Products will be loaded here -->
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <span>Loading products...</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cart Section -->
+    <section class="cart-section" id="cartSection" style="display: none;">
+        <h2><i class="fas fa-shopping-cart"></i> Your Cart</h2>
+        <div class="cart-container">
+            <div class="cart-items" id="cartItems">
+                <!-- Cart items will be loaded here -->
+            </div>
+            <div class="cart-summary">
+                <h3>Order Summary</h3>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="subtotal">$0.00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span>Free</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span id="totalAmount">$0.00</span>
+                </div>
+                <button class="btn btn-primary btn-block" onclick="checkout()">
+                    <i class="fas fa-credit-card"></i> Proceed to Checkout
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Orders Section -->
+    <section class="orders-section" id="ordersSection" style="display: none;">
+        <h2><i class="fas fa-box"></i> Your Orders</h2>
+        <div class="orders-list" id="ordersList">
+            <!-- Orders will be loaded here -->
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('loginModal')">&times;</span>
+            <h2><i class="fas fa-sign-in-alt"></i> Login</h2>
+            <form id="loginForm" onsubmit="login(event)">
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+            <p class="modal-footer">
+                Don't have an account? 
+                <a href="#" onclick="closeModal('loginModal'); showModal('registerModal')">Register</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('registerModal')">&times;</span>
+            <h2><i class="fas fa-user-plus"></i> Create Account</h2>
+            <form id="registerForm" onsubmit="register(event)">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Full Name</label>
+                    <input type="text" id="regName" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="regEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> Phone</label>
+                    <input type="tel" id="regPhone" placeholder="Enter your phone" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="regPassword" placeholder="Create a password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+            </form>
+            <p class="modal-footer">
+                Already have an account? 
+                <a href="#" onclick="closeModal('registerModal'); showModal('loginModal')">Login</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="modal" id="checkoutModal">
+        <div class="modal-content modal-large">
+            <span class="close-btn" onclick="closeModal('checkoutModal')">&times;</span>
+            <h2><i class="fas fa-credit-card"></i> Checkout</h2>
+            <form id="checkoutForm" onsubmit="placeOrder(event)">
+                <h3>Shipping Address</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Street Address</label>
+                        <input type="text" id="street" placeholder="123 Main St" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>City</label>
+                        <input type="text" id="city" placeholder="New York" required>
+                    </div>
+                    <div class="form-group">
+                        <label>State</label>
+                        <input type="text" id="state" placeholder="NY" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Zipcode</label>
+                        <input type="text" id="zipcode" placeholder="10001" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Country</label>
+                        <input type="text" id="country" placeholder="USA" required>
+                    </div>
+                </div>
+                <h3>Payment Method</h3>
+                <div class="payment-options">
+                    <label class="payment-option">
+                        <input type="radio" name="payment" value="UPI" checked>
+                        <span><i class="fas fa-mobile-alt"></i> UPI</span>
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment" value="CARD">
+                        <span><i class="fas fa-credit-card"></i> Card</span>
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment" value="COD">
+                        <span><i class="fas fa-money-bill"></i> Cash on Delivery</span>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fas fa-check"></i> Place Order
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <h2><i class="fas fa-lock"></i> Secure Payment</h2>
+            
+            <!-- Order Summary -->
+            <div class="payment-summary">
+                <div class="payment-summary-row">
+                    <span>Order ID:</span>
+                    <span>#<span id="paymentOrderId">-</span></span>
+                </div>
+                <div class="payment-summary-row">
+                    <span>Amount:</span>
+                    <span class="payment-amount">$<span id="paymentAmount">0.00</span></span>
+                </div>
+                <div class="payment-summary-row">
+                    <span>Method:</span>
+                    <span id="paymentMethodDisplay">CARD</span>
+                </div>
+            </div>
+
+            <!-- Payment Form -->
+            <div id="paymentFormContent">
+                <form id="paymentForm" onsubmit="processPayment(event)">
+                    <div class="card-preview">
+                        <div class="card-chip"></div>
+                        <div class="card-logo"><i class="fab fa-cc-visa"></i></div>
+                        <div class="card-number-preview">•••• •••• •••• ••••</div>
+                        <div class="card-details-preview">
+                            <span>CARD HOLDER</span>
+                            <span>VALID THRU</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-credit-card"></i> Card Number</label>
+                        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Cardholder Name</label>
+                        <input type="text" id="cardName" placeholder="John Doe" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar"></i> Expiry</label>
+                            <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-lock"></i> CVV</label>
+                            <input type="password" id="cardCvv" placeholder="•••" maxlength="3" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block btn-pay">
+                        <i class="fas fa-lock"></i> Pay $<span id="payBtnAmount">0.00</span>
+                    </button>
+                </form>
+                <p class="secure-note">
+                    <i class="fas fa-shield-alt"></i> This is a dummy payment for demo purposes
+                </p>
+            </div>
+
+            <!-- Payment Status -->
+            <div id="paymentStatus" style="display: none;">
+                <div class="payment-status-content">
+                    <i id="paymentStatusIcon" class="fas fa-spinner fa-spin"></i>
+                    <p id="paymentStatusText">Processing payment...</p>
+                </div>
+                <button id="paymentCloseBtn" class="btn btn-primary btn-block" onclick="closePaymentModal()" style="display: none;">
+                    <i class="fas fa-check"></i> View Orders
+                </button>
+                <button id="paymentRetryBtn" class="btn btn-outline btn-block" onclick="retryPayment()" style="display: none;">
+                    <i class="fas fa-redo"></i> Try Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Success!</span>
+    </div>
+
+    <!-- Database Verification Panel -->
+    <div class="db-panel" id="dbPanel">
+        <button class="db-panel-toggle" onclick="toggleDbPanel()">
+            <i class="fas fa-database"></i>
+        </button>
+        <div class="db-panel-content">
+            <h4><i class="fas fa-database"></i> Database Verification</h4>
+            <p class="db-connect">psql -U postgres -d e_com</p>
+            <div class="db-queries">
+                <div class="db-query-item">
+                    <span>Users</span>
+                    <code>SELECT * FROM user_table;</code>
+                </div>
+                <div class="db-query-item">
+                    <span>Products</span>
+                    <code>SELECT * FROM product_table;</code>
+                </div>
+                <div class="db-query-item">
+                    <span>Categories</span>
+                    <code>SELECT * FROM category_table;</code>
+                </div>
+                <div class="db-query-item">
+                    <span>Carts</span>
+                    <code>SELECT * FROM carts;</code>
+                </div>
+                <div class="db-query-item">
+                    <span>Cart Items</span>
+                    <code>SELECT * FROM cart_items;</code>
+                </div>
+                <div class="db-query-item">
+                    <span>Addresses</span>
+                    <code>SELECT * FROM addresses;</code>
+                </div>
+                <div class="db-query-item">
+                    <span>Orders</span>
+                    <code>SELECT * FROM orders;</code>
+                </div>
+                <div class="db-query-item">
+                    <span>Order Items</span>
+                    <code>SELECT * FROM order_items;</code>
+                </div>
+                <div class="db-query-item">
+                    <span>Payments</span>
+                    <code>SELECT * FROM payments;</code>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-shopping-bag"></i> ShopEase</h3>
+                <p>Your one-stop destination for amazing products.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="#">About Us</a>
+                <a href="#">Contact</a>
+                <a href="#">FAQ</a>
+            </div>
+            <div class="footer-section">
+                <h4>Follow Us</h4>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 ShopEase. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
+

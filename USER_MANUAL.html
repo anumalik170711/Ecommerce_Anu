@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce CLI Application - User Manual</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: #fff;
+        }
+        
+        @media print {
+            body {
+                padding: 20px;
+                font-size: 11pt;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+        
+        .cover-page {
+            text-align: center;
+            padding: 100px 20px;
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .cover-page h1 {
+            font-size: 2.5em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .cover-page .subtitle {
+            font-size: 1.3em;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+        }
+        
+        .cover-page .version {
+            font-size: 1em;
+            color: #95a5a6;
+            margin-top: 60px;
+        }
+        
+        .logo {
+            font-size: 4em;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin: 30px 0 20px 0;
+        }
+        
+        h2 {
+            color: #34495e;
+            margin: 25px 0 15px 0;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+        
+        h3 {
+            color: #2c3e50;
+            margin: 20px 0 10px 0;
+        }
+        
+        p {
+            margin: 10px 0;
+            text-align: justify;
+        }
+        
+        .toc {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .toc h2 {
+            border: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+        
+        .toc ul {
+            list-style: none;
+        }
+        
+        .toc li {
+            padding: 8px 0;
+            border-bottom: 1px dotted #ddd;
+        }
+        
+        .toc a {
+            color: #2c3e50;
+            text-decoration: none;
+        }
+        
+        .toc a:hover {
+            color: #3498db;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+        
+        .command-box {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .warning-box {
+            background: #fef9e7;
+            border-left: 4px solid #f39c12;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .success-box {
+            background: #e8f8f5;
+            border-left: 4px solid #27ae60;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .error-box {
+            background: #fdedec;
+            border-left: 4px solid #e74c3c;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background: #3498db;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .step {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .step-title {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+        
+        ul, ol {
+            margin: 10px 0 10px 30px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #7f8c8d;
+        }
+        
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .print-btn:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="print-btn no-print" onclick="window.print()">📄 Save as PDF</button>
+
+    <!-- Cover Page -->
+    <div class="cover-page">
+        <div class="logo">🛒</div>
+        <h1>E-Commerce CLI Application</h1>
+        <div class="subtitle">Complete User Manual & Setup Guide</div>
+        <p>A comprehensive guide for setting up and running the<br>E-Commerce Command Line Interface Application</p>
+        <div class="version">
+            <p><strong>Version:</strong> 1.0.0</p>
+            <p><strong>Date:</strong> December 2024</p>
+            <p><strong>Platform:</strong> Windows / macOS / Linux</p>
+        </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="page-break"></div>
+    <div class="toc">
+        <h2>📋 Table of Contents</h2>
+        <ul>
+            <li><strong>1.</strong> Introduction</li>
+            <li><strong>2.</strong> System Requirements</li>
+            <li><strong>3.</strong> Installing Java 17</li>
+            <li><strong>4.</strong> Installing PostgreSQL</li>
+            <li><strong>5.</strong> Database Setup</li>
+            <li><strong>6.</strong> Running the Application</li>
+            <li><strong>7.</strong> Using the CLI Interface</li>
+            <li><strong>8.</strong> Verifying Data in Database</li>
+            <li><strong>9.</strong> Complete Workflow Example</li>
+            <li><strong>10.</strong> Troubleshooting Guide</li>
+            <li><strong>11.</strong> Quick Reference</li>
+        </ul>
+    </div>
+
+    <!-- Section 1: Introduction -->
+    <div class="page-break"></div>
+    <h1>1. Introduction</h1>
+    <p>The E-Commerce CLI Application is a Java Spring Boot application that provides a command-line interface for managing an online shopping experience. Users can register, browse products, add items to cart, place orders, and process payments.</p>
+    
+    <h2>Key Features</h2>
+    <ul>
+        <li>User registration and authentication with JWT tokens</li>
+        <li>Product catalog browsing</li>
+        <li>Shopping cart management</li>
+        <li>Order placement and tracking</li>
+        <li>Payment processing simulation</li>
+        <li>PostgreSQL database for data persistence</li>
+    </ul>
+
+    <!-- Section 2: System Requirements -->
+    <h1>2. System Requirements</h1>
+    
+    <table>
+        <tr>
+            <th>Component</th>
+            <th>Requirement</th>
+        </tr>
+        <tr>
+            <td>Operating System</td>
+            <td>Windows 10/11, macOS 10.14+, or Linux</td>
+        </tr>
+        <tr>
+            <td>Java</td>
+            <td>JDK 17 or higher</td>
+        </tr>
+        <tr>
+            <td>Database</td>
+            <td>PostgreSQL 12 or higher</td>
+        </tr>
+        <tr>
+            <td>RAM</td>
+            <td>Minimum 4 GB (8 GB recommended)</td>
+        </tr>
+        <tr>
+            <td>Disk Space</td>
+            <td>500 MB for application + database</td>
+        </tr>
+        <tr>
+            <td>Network</td>
+            <td>Port 8080 (application) and 5432 (PostgreSQL)</td>
+        </tr>
+    </table>
+
+    <!-- Section 3: Installing Java -->
+    <div class="page-break"></div>
+    <h1>3. Installing Java 17</h1>
+
+    <h2>3.1 For Windows</h2>
+    
+    <div class="step">
+        <span class="step-number">1</span>
+        <span class="step-title">Download Java 17</span>
+        <p>Visit: <code>https://adoptium.net/temurin/releases/?version=17</code></p>
+        <p>Select <strong>Windows x64</strong> and download the <strong>.msi</strong> installer.</p>
+    </div>
+
+    <div class="step">
+        <span class="step-number">2</span>
+        <span class="step-title">Run the Installer</span>
+        <p>Double-click the downloaded file and follow the installation wizard.</p>
+        <p>Accept the default settings and complete installation.</p>
+    </div>
+
+    <div class="step">
+        <span class="step-number">3</span>
+        <span class="step-title">Verify Installation</span>
+        <p>Open <strong>Command Prompt</strong> and run:</p>
+        <pre><code>java -version</code></pre>
+        <p>Expected output: <code>openjdk version "17.x.x"</code></p>
+    </div>
+
+    <h2>3.2 For macOS</h2>
+    
+    <div class="command-box">
+        <p><strong>Install using Homebrew:</strong></p>
+        <pre><code>brew install openjdk@17
+echo 'export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+java -version</code></pre>
+    </div>
+
+    <h2>3.3 For Linux (Ubuntu/Debian)</h2>
+    
+    <div class="command-box">
+        <pre><code>sudo apt update
+sudo apt install openjdk-17-jdk
+java -version</code></pre>
+    </div>
+
+    <!-- Section 4: Installing PostgreSQL -->
+    <div class="page-break"></div>
+    <h1>4. Installing PostgreSQL</h1>
+
+    <h2>4.1 For Windows</h2>
+
+    <div class="step">
+        <span class="step-number">1</span>
+        <span class="step-title">Download PostgreSQL</span>
+        <p>Visit: <code>https://www.postgresql.org/download/windows/</code></p>
+        <p>Download the Windows installer.</p>
+    </div>
+
+    <div class="step">
+        <span class="step-number">2</span>
+        <span class="step-title">Run the Installer</span>
+        <ul>
+            <li>Accept default installation directory</li>
+            <li>Select all components</li>
+            <li><strong>Important:</strong> Remember the password you set for <code>postgres</code> user</li>
+            <li>Keep default port: <strong>5432</strong></li>
+            <li>Complete the installation</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <span class="step-number">3</span>
+        <span class="step-title">Verify Installation</span>
+        <p>Open <strong>Command Prompt</strong> and run:</p>
+        <pre><code>psql -U postgres</code></pre>
+        <p>Enter your password. If you see <code>postgres=#</code>, PostgreSQL is working.</p>
+    </div>
+
+    <h2>4.2 For macOS</h2>
+    
+    <div class="command-box">
+        <pre><code>brew install postgresql@15
+brew services start postgresql@15
+echo 'export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc</code></pre>
+    </div>
+
+    <h2>4.3 For Linux (Ubuntu/Debian)</h2>
+    
+    <div class="command-box">
+        <pre><code>sudo apt update
+sudo apt install postgresql postgresql-contrib
+sudo systemctl start postgresql
+sudo systemctl enable postgresql</code></pre>
+    </div>
+
+    <!-- Section 5: Database Setup -->
+    <div class="page-break"></div>
+    <h1>5. Database Setup</h1>
+
+    <h2>5.1 Create the Database</h2>
+    
+    <div class="step">
+        <span class="step-number">1</span>
+        <span class="step-title">Connect to PostgreSQL</span>
+        <p>Open Command Prompt (Windows) or Terminal (macOS/Linux):</p>
+        <pre><code>psql -U postgres</code></pre>
+        <p>Enter your postgres password when prompted.</p>
+    </div>
+
+    <div class="step">
+        <span class="step-number">2</span>
+        <span class="step-title">Create Database</span>
+        <pre><code>CREATE DATABASE e_com;</code></pre>
+        <p>You should see: <code>CREATE DATABASE</code></p>
+    </div>
+
+    <div class="step">
+        <span class="step-number">3</span>
+        <span class="step-title">Verify Database Creation</span>
+        <pre><code>\l</code></pre>
+        <p>Look for <code>e_com</code> in the list of databases.</p>
+    </div>
+
+    <div class="step">
+        <span class="step-number">4</span>
+        <span class="step-title">Set Password (Optional)</span>
+        <p>To match the application configuration:</p>
+        <pre><code>ALTER USER postgres WITH PASSWORD 'sherupass';</code></pre>
+        <p>Or update the application config file with your password (see Section 5.2).</p>
+    </div>
+
+    <div class="step">
+        <span class="step-number">5</span>
+        <span class="step-title">Exit PostgreSQL</span>
+        <pre><code>\q</code></pre>
+    </div>
+
+    <h2>5.2 Configure Application Password</h2>
+    
+    <p>If you want to use your own PostgreSQL password instead of <code>sherupass</code>:</p>
+    
+    <div class="step">
+        <span class="step-number">1</span>
+        <span class="step-title">Open Configuration File</span>
+        <p>Navigate to: <code>src/main/resources/application.properties</code></p>
+    </div>
+
+    <div class="step">
+        <span class="step-number">2</span>
+        <span class="step-title">Update Password</span>
+        <p>Find this line:</p>
+        <pre><code>spring.datasource.password=sherupass</code></pre>
+        <p>Change to your password:</p>
+        <pre><code>spring.datasource.password=YOUR_PASSWORD</code></pre>
+    </div>
+
+    <div class="page-break"></div>
+    <h2>5.3 Add Sample Data</h2>
+    
+    <p>Connect to the e_com database and add sample products:</p>
+    
+    <div class="command-box">
+        <pre><code>psql -U postgres -d e_com</code></pre>
+    </div>
+
+    <p>Run these SQL commands:</p>
+
+    <h3>Add Categories:</h3>
+    <pre><code>INSERT INTO category_table (category_id, category_name) VALUES (1, 'Electronics');
+INSERT INTO category_table (category_id, category_name) VALUES (2, 'Clothing');
+INSERT INTO category_table (category_id, category_name) VALUES (3, 'Books');</code></pre>
+
+    <h3>Add Products:</h3>
+    <pre><code>INSERT INTO product_table (product_id, product_name, description, price, stock_present, category_id, created_at) 
+VALUES (1, 'iPhone 15', 'Latest Apple smartphone', 999.99, 50, 1, NOW());
+
+INSERT INTO product_table (product_id, product_name, description, price, stock_present, category_id, created_at) 
+VALUES (2, 'Samsung Galaxy S24', 'Android flagship phone', 899.99, 30, 1, NOW());
+
+INSERT INTO product_table (product_id, product_name, description, price, stock_present, category_id, created_at) 
+VALUES (3, 'Cotton T-Shirt', 'Comfortable cotton t-shirt', 29.99, 100, 2, NOW());
+
+INSERT INTO product_table (product_id, product_name, description, price, stock_present, category_id, created_at) 
+VALUES (4, 'Java Programming Book', 'Learn Java from scratch', 49.99, 25, 3, NOW());</code></pre>
+
+    <h3>Update Sequences:</h3>
+    <pre><code>SELECT setval('category_table_category_id_seq', 10);
+SELECT setval('product_table_product_id_seq', 10);</code></pre>
+
+    <p>Exit with: <code>\q</code></p>
+
+    <!-- Section 6: Running the Application -->
+    <div class="page-break"></div>
+    <h1>6. Running the Application</h1>
+
+    <h2>6.1 Navigate to Project Directory</h2>
+    
+    <div class="command-box">
+        <p><strong>Windows (Command Prompt):</strong></p>
+        <pre><code>cd C:\path\to\ecommerce4-Updated</code></pre>
+    </div>
+
+    <div class="command-box">
+        <p><strong>macOS/Linux (Terminal):</strong></p>
+        <pre><code>cd /path/to/ecommerce4-Updated</code></pre>
+    </div>
+
+    <h2>6.2 Start the Application</h2>
+
+    <div class="command-box">
+        <p><strong>Windows:</strong></p>
+        <pre><code>mvnw.cmd spring-boot:run</code></pre>
+    </div>
+
+    <div class="command-box">
+        <p><strong>macOS/Linux:</strong></p>
+        <pre><code>./mvnw spring-boot:run</code></pre>
+    </div>
+
+    <div class="warning-box">
+        <p><strong>⚠️ First Run:</strong> The first time you run the application, it will download dependencies. This may take 2-5 minutes depending on your internet speed.</p>
+    </div>
+
+    <h2>6.3 Successful Startup</h2>
+    
+    <p>When the application starts successfully, you'll see the CLI menu:</p>
+    
+    <pre><code>==== E-COMMERCE CLI ====
+1. Register
+2. Login
+3. View All Products
+4. Add Product to Cart
+5. View Cart
+6. Checkout / Place Order
+7. Initiate Payment
+8. Verify Payment
+9. Exit
+Select option:</code></pre>
+
+    <!-- Section 7: Using the CLI -->
+    <div class="page-break"></div>
+    <h1>7. Using the CLI Interface</h1>
+
+    <h2>7.1 Menu Options</h2>
+
+    <table>
+        <tr>
+            <th>Option</th>
+            <th>Description</th>
+            <th>Login Required</th>
+        </tr>
+        <tr>
+            <td>1. Register</td>
+            <td>Create a new user account</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>2. Login</td>
+            <td>Log into your account</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>3. View All Products</td>
+            <td>Display all available products</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>4. Add Product to Cart</td>
+            <td>Add a product to shopping cart</td>
+            <td>Yes</td>
+        </tr>
+        <tr>
+            <td>5. View Cart</td>
+            <td>View items in your cart</td>
+            <td>Yes</td>
+        </tr>
+        <tr>
+            <td>6. Checkout</td>
+            <td>Place an order from cart items</td>
+            <td>Yes</td>
+        </tr>
+        <tr>
+            <td>7. Initiate Payment</td>
+            <td>Start payment for an order</td>
+            <td>Yes</td>
+        </tr>
+        <tr>
+            <td>8. Verify Payment</td>
+            <td>Complete payment verification</td>
+            <td>Yes</td>
+        </tr>
+        <tr>
+            <td>9. Exit</td>
+            <td>Close the application</td>
+            <td>No</td>
+        </tr>
+    </table>
+
+    <h2>7.2 Typical User Flow</h2>
+
+    <div class="success-box">
+        <p><strong>Recommended Order:</strong></p>
+        <p>Register → Login → View Products → Add to Cart → Checkout → Initiate Payment → Verify Payment</p>
+    </div>
+
+    <!-- Section 8: Verifying Data -->
+    <div class="page-break"></div>
+    <h1>8. Verifying Data in Database</h1>
+
+    <p>Open a <strong>second terminal window</strong> to monitor database changes while using the CLI.</p>
+
+    <h2>8.1 Connect to Database</h2>
+    
+    <div class="command-box">
+        <pre><code>psql -U postgres -d e_com</code></pre>
+    </div>
+
+    <h2>8.2 Useful SQL Commands</h2>
+
+    <table>
+        <tr>
+            <th>Purpose</th>
+            <th>SQL Command</th>
+        </tr>
+        <tr>
+            <td>List all tables</td>
+            <td><code>\dt</code></td>
+        </tr>
+        <tr>
+            <td>View all users</td>
+            <td><code>SELECT * FROM user_table;</code></td>
+        </tr>
+        <tr>
+            <td>View all products</td>
+            <td><code>SELECT * FROM product_table;</code></td>
+        </tr>
+        <tr>
+            <td>View categories</td>
+            <td><code>SELECT * FROM category_table;</code></td>
+        </tr>
+        <tr>
+            <td>View addresses</td>
+            <td><code>SELECT * FROM addresses;</code></td>
+        </tr>
+        <tr>
+            <td>View shopping carts</td>
+            <td><code>SELECT * FROM carts;</code></td>
+        </tr>
+        <tr>
+            <td>View cart items</td>
+            <td><code>SELECT * FROM cart_items;</code></td>
+        </tr>
+        <tr>
+            <td>View orders</td>
+            <td><code>SELECT * FROM orders;</code></td>
+        </tr>
+        <tr>
+            <td>View order items</td>
+            <td><code>SELECT * FROM order_items;</code></td>
+        </tr>
+        <tr>
+            <td>View payments</td>
+            <td><code>SELECT * FROM payments;</code></td>
+        </tr>
+        <tr>
+            <td>Exit psql</td>
+            <td><code>\q</code></td>
+        </tr>
+    </table>
+
+    <!-- Section 9: Complete Workflow -->
+    <div class="page-break"></div>
+    <h1>9. Complete Workflow Example</h1>
+
+    <h2>Step A: Register a User</h2>
+    
+    <div class="step">
+        <p><strong>CLI Input:</strong></p>
+        <pre><code>Select option: 1
+Enter name: John Doe
+Enter email: john@example.com
+Enter password: password123
+Enter phone: 9876543210</code></pre>
+    </div>
+
+    <div class="step">
+        <p><strong>Verify in Database:</strong></p>
+        <pre><code>SELECT id, name, email FROM user_table;</code></pre>
+    </div>
+
+    <h2>Step B: Login</h2>
+    
+    <div class="step">
+        <p><strong>CLI Input:</strong></p>
+        <pre><code>Select option: 2
+Enter email: john@example.com
+Enter password: password123</code></pre>
+        <p><strong>Output:</strong> Login successful! Your User ID = 1</p>
+    </div>
+
+    <h2>Step C: View Products</h2>
+    
+    <div class="step">
+        <p><strong>CLI Input:</strong></p>
+        <pre><code>Select option: 3</code></pre>
+        <p>Products will be displayed with their IDs.</p>
+    </div>
+
+    <h2>Step D: Add Product to Cart</h2>
+    
+    <div class="step">
+        <p><strong>CLI Input:</strong></p>
+        <pre><code>Select option: 4
+Enter product ID to add: 1</code></pre>
+    </div>
+
+    <div class="step">
+        <p><strong>Verify in Database:</strong></p>
+        <pre><code>SELECT * FROM carts;
+SELECT * FROM cart_items;</code></pre>
+    </div>
+
+    <h2>Step E: Add Address (Before Checkout)</h2>
+    
+    <div class="warning-box">
+        <p><strong>Important:</strong> You need to add an address before checkout. Run this in psql:</p>
+        <pre><code>INSERT INTO addresses (street, city, state, zipcode, country, user_id) 
+VALUES ('123 Main St', 'New York', 'NY', '10001', 'USA', 1);</code></pre>
+    </div>
+
+    <h2>Step F: Checkout</h2>
+    
+    <div class="step">
+        <p><strong>CLI Input:</strong></p>
+        <pre><code>Select option: 6
+Enter addressId: 1
+Enter payment method (COD / UPI / CARD): UPI</code></pre>
+    </div>
+
+    <div class="step">
+        <p><strong>Verify in Database:</strong></p>
+        <pre><code>SELECT * FROM orders;
+SELECT * FROM order_items;</code></pre>
+    </div>
+
+    <h2>Step G: Initiate Payment</h2>
+    
+    <div class="step">
+        <p><strong>CLI Input:</strong></p>
+        <pre><code>Select option: 7
+Enter Order ID to initiate payment: 1
+Enter Payment method: UPI</code></pre>
+        <p><strong>Note:</strong> Save the Payment ID and Transaction ID shown.</p>
+    </div>
+
+    <h2>Step H: Verify Payment</h2>
+    
+    <div class="step">
+        <p><strong>CLI Input:</strong></p>
+        <pre><code>Select option: 8
+Enter Payment ID: 1
+Enter Transaction ID: [from previous step]
+Was the payment successful? (yes/no): yes</code></pre>
+    </div>
+
+    <div class="step">
+        <p><strong>Verify in Database:</strong></p>
+        <pre><code>SELECT * FROM payments;
+SELECT order_id, status FROM orders;</code></pre>
+    </div>
+
+    <!-- Section 10: Troubleshooting -->
+    <div class="page-break"></div>
+    <h1>10. Troubleshooting Guide</h1>
+
+    <h2>10.1 Database Connection Errors</h2>
+
+    <div class="error-box">
+        <p><strong>Error:</strong> <code>FATAL: database "e_com" does not exist</code></p>
+        <p><strong>Solution:</strong> Create the database:</p>
+        <pre><code>psql -U postgres
+CREATE DATABASE e_com;
+\q</code></pre>
+    </div>
+
+    <div class="error-box">
+        <p><strong>Error:</strong> <code>Connection refused</code></p>
+        <p><strong>Solution (Windows):</strong></p>
+        <ol>
+            <li>Press <code>Win + R</code>, type <code>services.msc</code></li>
+            <li>Find <strong>postgresql-x64-XX</strong></li>
+            <li>Right-click → Start</li>
+        </ol>
+    </div>
+
+    <div class="error-box">
+        <p><strong>Error:</strong> <code>Authentication failed</code></p>
+        <p><strong>Solution:</strong> Update password in <code>application.properties</code>:</p>
+        <pre><code>spring.datasource.password=YOUR_ACTUAL_PASSWORD</code></pre>
+    </div>
+
+    <h2>10.2 Application Errors</h2>
+
+    <div class="error-box">
+        <p><strong>Error:</strong> <code>Port 8080 already in use</code></p>
+        <p><strong>Solution:</strong> Stop other applications using port 8080, or change port in <code>application.properties</code>:</p>
+        <pre><code>server.port=8081</code></pre>
+    </div>
+
+    <div class="error-box">
+        <p><strong>Error:</strong> <code>Please login first</code></p>
+        <p><strong>Solution:</strong> You must login (Option 2) before using cart, checkout, or payment features.</p>
+    </div>
+
+    <h2>10.3 Data Issues</h2>
+
+    <div class="error-box">
+        <p><strong>Issue:</strong> No products showing</p>
+        <p><strong>Solution:</strong> Add sample products using SQL commands in Section 5.3</p>
+    </div>
+
+    <!-- Section 11: Quick Reference -->
+    <div class="page-break"></div>
+    <h1>11. Quick Reference Card</h1>
+
+    <h2>Application Commands</h2>
+    
+    <table>
+        <tr>
+            <th>Action</th>
+            <th>Windows</th>
+            <th>macOS/Linux</th>
+        </tr>
+        <tr>
+            <td>Start Application</td>
+            <td><code>mvnw.cmd spring-boot:run</code></td>
+            <td><code>./mvnw spring-boot:run</code></td>
+        </tr>
+        <tr>
+            <td>Stop Application</td>
+            <td><code>Ctrl + C</code></td>
+            <td><code>Ctrl + C</code></td>
+        </tr>
+    </table>
+
+    <h2>PostgreSQL Commands</h2>
+    
+    <table>
+        <tr>
+            <th>Action</th>
+            <th>Command</th>
+        </tr>
+        <tr>
+            <td>Connect to PostgreSQL</td>
+            <td><code>psql -U postgres</code></td>
+        </tr>
+        <tr>
+            <td>Connect to e_com database</td>
+            <td><code>psql -U postgres -d e_com</code></td>
+        </tr>
+        <tr>
+            <td>List databases</td>
+            <td><code>\l</code></td>
+        </tr>
+        <tr>
+            <td>List tables</td>
+            <td><code>\dt</code></td>
+        </tr>
+        <tr>
+            <td>Describe table</td>
+            <td><code>\d table_name</code></td>
+        </tr>
+        <tr>
+            <td>Exit psql</td>
+            <td><code>\q</code></td>
+        </tr>
+    </table>
+
+    <h2>Database Tables</h2>
+    
+    <table>
+        <tr>
+            <th>Table Name</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>user_table</td>
+            <td>User accounts</td>
+        </tr>
+        <tr>
+            <td>product_table</td>
+            <td>Product catalog</td>
+        </tr>
+        <tr>
+            <td>category_table</td>
+            <td>Product categories</td>
+        </tr>
+        <tr>
+            <td>addresses</td>
+            <td>User addresses</td>
+        </tr>
+        <tr>
+            <td>carts</td>
+            <td>Shopping carts</td>
+        </tr>
+        <tr>
+            <td>cart_items</td>
+            <td>Items in carts</td>
+        </tr>
+        <tr>
+            <td>orders</td>
+            <td>Placed orders</td>
+        </tr>
+        <tr>
+            <td>order_items</td>
+            <td>Items in orders</td>
+        </tr>
+        <tr>
+            <td>payments</td>
+            <td>Payment records</td>
+        </tr>
+    </table>
+
+    <h2>Configuration File</h2>
+    
+    <p><strong>Location:</strong> <code>src/main/resources/application.properties</code></p>
+    
+    <pre><code>spring.application.name=ecommerce
+spring.datasource.url=jdbc:postgresql://localhost:5432/e_com
+spring.datasource.username=postgres
+spring.datasource.password=sherupass
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true</code></pre>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>E-Commerce CLI Application - User Manual</p>
+        <p>Version 1.0.0 | December 2024</p>
+        <p>© All Rights Reserved</p>
+    </div>
+
+</body>
+</html>
+

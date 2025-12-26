@@ -1,0 +1,328 @@
+================================================================================
+                    E-COMMERCE CLI APPLICATION
+                         USER MANUAL
+                        Version 1.0.0
+                       December 2024
+================================================================================
+
+TABLE OF CONTENTS
+-----------------
+1. System Requirements
+2. Installing Java 17
+3. Installing PostgreSQL
+4. Database Setup
+5. Running the Application
+6. Using the CLI Interface
+7. Verifying Data in Database
+8. Quick Reference
+9. Troubleshooting
+
+================================================================================
+1. SYSTEM REQUIREMENTS
+================================================================================
+
+- Operating System: Windows 10/11, macOS 10.14+, or Linux
+- Java: JDK 17 or higher
+- Database: PostgreSQL 12 or higher
+- RAM: Minimum 4 GB
+- Disk Space: 500 MB
+- Ports: 8080 (application), 5432 (PostgreSQL)
+
+================================================================================
+2. INSTALLING JAVA 17
+================================================================================
+
+FOR WINDOWS:
+------------
+1. Download from: https://adoptium.net/temurin/releases/?version=17
+2. Select "Windows x64" and download .msi installer
+3. Run installer and follow prompts
+4. Verify: Open Command Prompt and run:
+   
+   java -version
+
+FOR macOS:
+----------
+   brew install openjdk@17
+   echo 'export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"' >> ~/.zshrc
+   source ~/.zshrc
+   java -version
+
+FOR LINUX (Ubuntu/Debian):
+--------------------------
+   sudo apt update
+   sudo apt install openjdk-17-jdk
+   java -version
+
+================================================================================
+3. INSTALLING POSTGRESQL
+================================================================================
+
+FOR WINDOWS:
+------------
+1. Download from: https://www.postgresql.org/download/windows/
+2. Run installer
+3. IMPORTANT: Remember the password you set for 'postgres' user
+4. Keep default port: 5432
+5. Complete installation
+6. Verify: Open Command Prompt and run:
+   
+   psql -U postgres
+   
+   Enter password. If you see "postgres=#", it's working.
+
+FOR macOS:
+----------
+   brew install postgresql@15
+   brew services start postgresql@15
+   echo 'export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"' >> ~/.zshrc
+   source ~/.zshrc
+
+FOR LINUX (Ubuntu/Debian):
+--------------------------
+   sudo apt update
+   sudo apt install postgresql postgresql-contrib
+   sudo systemctl start postgresql
+   sudo systemctl enable postgresql
+
+================================================================================
+4. DATABASE SETUP
+================================================================================
+
+STEP 1: Create the Database
+---------------------------
+Open Command Prompt (Windows) or Terminal (macOS/Linux):
+
+   psql -U postgres
+
+Enter your password, then run:
+
+   CREATE DATABASE e_com;
+
+Verify with:
+
+   \l
+
+You should see "e_com" in the list.
+
+Exit:
+
+   \q
+
+
+STEP 2: Configure Password (Choose ONE option)
+----------------------------------------------
+
+OPTION A: Change PostgreSQL password to match app config:
+
+   psql -U postgres
+   ALTER USER postgres WITH PASSWORD 'sherupass';
+   \q
+
+OPTION B: Update app config with your password:
+   
+   Open: src/main/resources/application.properties
+   Change: spring.datasource.password=YOUR_PASSWORD
+
+
+STEP 3: Add Sample Data
+-----------------------
+Connect to database:
+
+   psql -U postgres -d e_com
+
+Run these SQL commands:
+
+-- Add Categories
+INSERT INTO category_table (category_id, category_name) VALUES (1, 'Electronics');
+INSERT INTO category_table (category_id, category_name) VALUES (2, 'Clothing');
+INSERT INTO category_table (category_id, category_name) VALUES (3, 'Books');
+
+-- Add Products
+INSERT INTO product_table (product_id, product_name, description, price, stock_present, category_id, created_at) 
+VALUES (1, 'iPhone 15', 'Latest Apple smartphone', 999.99, 50, 1, NOW());
+
+INSERT INTO product_table (product_id, product_name, description, price, stock_present, category_id, created_at) 
+VALUES (2, 'Samsung Galaxy S24', 'Android flagship phone', 899.99, 30, 1, NOW());
+
+INSERT INTO product_table (product_id, product_name, description, price, stock_present, category_id, created_at) 
+VALUES (3, 'Cotton T-Shirt', 'Comfortable cotton t-shirt', 29.99, 100, 2, NOW());
+
+INSERT INTO product_table (product_id, product_name, description, price, stock_present, category_id, created_at) 
+VALUES (4, 'Java Programming Book', 'Learn Java from scratch', 49.99, 25, 3, NOW());
+
+-- Update Sequences
+SELECT setval('category_table_category_id_seq', 10);
+SELECT setval('product_table_product_id_seq', 10);
+
+Exit:
+
+   \q
+
+================================================================================
+5. RUNNING THE APPLICATION
+================================================================================
+
+STEP 1: Open Command Prompt/Terminal
+
+STEP 2: Navigate to project folder:
+
+   cd C:\path\to\ecommerce4-Updated        (Windows)
+   cd /path/to/ecommerce4-Updated          (macOS/Linux)
+
+STEP 3: Start the application:
+
+   WINDOWS:     mvnw.cmd spring-boot:run
+   macOS/Linux: ./mvnw spring-boot:run
+
+NOTE: First run downloads dependencies (2-5 minutes)
+
+STEP 4: Wait for CLI menu to appear:
+
+   ==== E-COMMERCE CLI ====
+   1. Register
+   2. Login
+   3. View All Products
+   ...
+
+================================================================================
+6. USING THE CLI INTERFACE
+================================================================================
+
+MENU OPTIONS:
++--------+------------------------+----------------+
+| Option | Description            | Login Required |
++--------+------------------------+----------------+
+| 1      | Register               | No             |
+| 2      | Login                  | No             |
+| 3      | View All Products      | No             |
+| 4      | Add Product to Cart    | Yes            |
+| 5      | View Cart              | Yes            |
+| 6      | Checkout / Place Order | Yes            |
+| 7      | Initiate Payment       | Yes            |
+| 8      | Verify Payment         | Yes            |
+| 9      | Exit                   | No             |
++--------+------------------------+----------------+
+
+RECOMMENDED FLOW:
+Register -> Login -> View Products -> Add to Cart -> Checkout -> 
+Initiate Payment -> Verify Payment
+
+================================================================================
+7. VERIFYING DATA IN DATABASE
+================================================================================
+
+Open a SECOND terminal window for database verification.
+
+Connect to database:
+
+   psql -U postgres -d e_com
+
+USEFUL SQL COMMANDS:
++----------------------+--------------------------------+
+| Purpose              | Command                        |
++----------------------+--------------------------------+
+| List all tables      | \dt                            |
+| View users           | SELECT * FROM user_table;      |
+| View products        | SELECT * FROM product_table;   |
+| View categories      | SELECT * FROM category_table;  |
+| View addresses       | SELECT * FROM addresses;       |
+| View carts           | SELECT * FROM carts;           |
+| View cart items      | SELECT * FROM cart_items;      |
+| View orders          | SELECT * FROM orders;          |
+| View order items     | SELECT * FROM order_items;     |
+| View payments        | SELECT * FROM payments;        |
+| Exit                 | \q                             |
++----------------------+--------------------------------+
+
+================================================================================
+8. QUICK REFERENCE
+================================================================================
+
+APPLICATION COMMANDS:
+---------------------
+Start (Windows):     mvnw.cmd spring-boot:run
+Start (macOS/Linux): ./mvnw spring-boot:run
+Stop:                Ctrl + C
+
+POSTGRESQL COMMANDS:
+--------------------
+Connect to PostgreSQL:    psql -U postgres
+Connect to e_com:         psql -U postgres -d e_com
+List databases:           \l
+List tables:              \dt
+Describe table:           \d table_name
+Exit:                     \q
+
+DATABASE TABLES:
+----------------
+- user_table      : User accounts
+- product_table   : Product catalog
+- category_table  : Product categories
+- addresses       : User addresses
+- carts           : Shopping carts
+- cart_items      : Items in carts
+- orders          : Placed orders
+- order_items     : Items in orders
+- payments        : Payment records
+
+CONFIGURATION FILE:
+-------------------
+Location: src/main/resources/application.properties
+
+spring.datasource.url=jdbc:postgresql://localhost:5432/e_com
+spring.datasource.username=postgres
+spring.datasource.password=sherupass
+
+================================================================================
+9. TROUBLESHOOTING
+================================================================================
+
+ERROR: "database 'e_com' does not exist"
+----------------------------------------
+Solution: Create the database:
+   psql -U postgres
+   CREATE DATABASE e_com;
+   \q
+
+
+ERROR: "Connection refused"
+---------------------------
+Solution (Windows):
+   1. Press Win + R, type: services.msc
+   2. Find "postgresql-x64-XX" in the list
+   3. Right-click -> Start
+
+
+ERROR: "Authentication failed"
+------------------------------
+Solution: Update password in application.properties:
+   spring.datasource.password=YOUR_ACTUAL_PASSWORD
+
+
+ERROR: "Port 8080 already in use"
+---------------------------------
+Solution: Add to application.properties:
+   server.port=8081
+
+
+ERROR: "Please login first"
+---------------------------
+Solution: Use Option 2 (Login) before using cart/checkout/payment
+
+
+ERROR: "No products showing"
+----------------------------
+Solution: Add sample products using SQL in Section 4
+
+
+ERROR: SQL command not working
+------------------------------
+Solution: Make sure to add semicolon (;) at the end:
+   CREATE DATABASE e_com;   <-- correct
+   CREATE DATABASE e_com    <-- wrong (missing ;)
+
+================================================================================
+                          END OF USER MANUAL
+================================================================================
+

@@ -1,0 +1,152 @@
+# ============================================
+# DOCKER COMPOSE FILE
+# ============================================
+# This file orchestrates the E-Commerce application
+# with PostgreSQL database
+# ============================================
+# Version: 3.8 (compatible with Docker Engine 19.03.0+)
+
+version: '3.8'
+
+services:
+  # ==========================================
+  # POSTGRESQL DATABASE SERVICE
+  # ==========================================
+  postgres:
+    # Official PostgreSQL 15 image
+    image: postgres:15-alpine
+    
+    # Container name for easy reference
+    container_name: ecommerce-postgres
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Environment variables for database setup
+    environment:
+      # Database name (matches application.properties)
+      POSTGRES_DB: e_com
+      # Database username
+      POSTGRES_USER: postgres
+      # Database password (matches application.properties)
+      POSTGRES_PASSWORD: sherupass
+      # Timezone
+      TZ: Asia/Kolkata
+    
+    # Port mapping: host:container
+    ports:
+      - "5432:5432"
+    
+    # Persistent volume for database data
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # Optional: Initialize database with SQL scripts
+      - ./docker/init-db:/docker-entrypoint-initdb.d
+    
+    # Health check for database
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d e_com"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    
+    # Network configuration
+    networks:
+      - ecommerce-network
+
+  # ==========================================
+  # E-COMMERCE APPLICATION SERVICE
+  # ==========================================
+  ecommerce-app:
+    # Build from Dockerfile in current directory
+    build:
+      context: .
+      dockerfile: Dockerfile
+    
+    # Container name
+    container_name: ecommerce-app
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Environment variables (override application.properties)
+    environment:
+      # Database connection (use service name 'postgres' as hostname)
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/e_com
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: sherupass
+      # JPA settings
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+      # Server settings
+      SERVER_PORT: 8080
+      # Timezone
+      TZ: Asia/Kolkata
+    
+    # Port mapping
+    ports:
+      - "8080:8080"
+    
+    # Wait for postgres to be healthy before starting
+    depends_on:
+      postgres:
+        condition: service_healthy
+    
+    # Network configuration
+    networks:
+      - ecommerce-network
+    
+    # Interactive mode for CLI application
+    stdin_open: true
+    tty: true
+
+  # ==========================================
+  # PGADMIN SERVICE (Optional - Database GUI)
+  # ==========================================
+  pgadmin:
+    # PgAdmin 4 web interface
+    image: dpage/pgadmin4:latest
+    
+    container_name: ecommerce-pgadmin
+    
+    restart: unless-stopped
+    
+    environment:
+      # PgAdmin login credentials
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    
+    ports:
+      - "5050:80"
+    
+    depends_on:
+      - postgres
+    
+    networks:
+      - ecommerce-network
+    
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+# ==========================================
+# NETWORKS
+# ==========================================
+networks:
+  ecommerce-network:
+    driver: bridge
+    name: ecommerce-network
+
+# ==========================================
+# VOLUMES
+# ==========================================
+volumes:
+  # Persistent storage for PostgreSQL data
+  postgres_data:
+    name: ecommerce-postgres-data
+  
+  # Persistent storage for PgAdmin
+  pgadmin_data:
+    name: ecommerce-pgadmin-data
+
