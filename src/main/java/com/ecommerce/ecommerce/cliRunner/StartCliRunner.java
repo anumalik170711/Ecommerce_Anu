@@ -14,6 +14,6 @@ public class StartCliRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        cliService.start();   // THIS starts your actual CLI menu
+        //cliService.start();   // THIS starts your actual CLI menu
     }
 }
